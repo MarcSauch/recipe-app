@@ -1,0 +1,22 @@
+FROM denoland/deno:alpine
+
+WORKDIR /app
+
+# Copy deno configuration first
+COPY deno-recipe-app/app/deno.json ./
+COPY deno-recipe-app/app/deno.lock ./
+
+# Install dependencies (this will cache them)
+RUN deno cache --lock=deno.lock deps.ts || echo "No deps.ts found, continuing..."
+
+# Copy source code
+COPY deno-recipe-app/app/ .
+
+# Cache the main entry point and its dependencies
+RUN deno cache main.ts
+
+# Expose port
+EXPOSE 8010
+
+# Run the application with proper Deno runtime
+CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "--allow-write", "--allow-sys", "main.ts"]
