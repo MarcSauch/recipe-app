@@ -23,7 +23,7 @@ docker-compose --profile development up -d
 ## Services
 
 ### Frontend (Port 80 & 4200)
-- Production build served by Nginx
+- Production build 
 - Available at http://localhost or http://localhost:4200
 
 ### Backend (Port 8010)
