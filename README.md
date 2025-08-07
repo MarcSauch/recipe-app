@@ -4,7 +4,7 @@ This directory contains the Docker configuration to run the complete Recipe App 
 
 ## Architecture
 
-- **Frontend**: Angular application served by Nginx
+- **Frontend**: Angular application
 - **Backend**: Deno API server
 - **Database**: PostgreSQL database
 
