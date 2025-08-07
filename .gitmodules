@@ -1,0 +1,6 @@
+[submodule "deno-recipe-app"]
+	path = deno-recipe-app
+	url = https://github.com/MarcSauch/deno-recipe-app
+[submodule "angular-recipe-app"]
+	path = angular-recipe-app
+	url = https://github.com/MarcSauch/angular-recipe-app
