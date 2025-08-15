@@ -1,9 +1,9 @@
-# Build stage
-FROM node:22-alpine AS build
+# Build stage - use debian-based image to avoid musl rollup issues
+FROM node:22-bullseye AS build
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY angular-recipe-app/package*.json ./
 
 # Install dependencies
@@ -12,8 +12,22 @@ RUN npm ci
 # Copy source code
 COPY angular-recipe-app/ .
 
-# Build the application
+# Install Angular CLI globally
+RUN npm install -g @angular/cli --no-audit --no-fund
+
+# Build the application (remove duplicate build command)
 RUN npm run build
+
+# EXPOSE 4200
+# CMD ["npm", "start"]
+
+
+EXPOSE 4200
+CMD [ "npm", "start" ]
+# CMD [ "npm", "ci" ]
+# CMD [ "sleep", "infinity" ]
+
+# RUN sleep infinity
 
 # # Production stage
 # FROM nginx:alpine

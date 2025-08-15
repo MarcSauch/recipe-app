@@ -1,0 +1,25 @@
+FROM denoland/deno:latest
+
+# Create working directory
+WORKDIR /app
+
+# # Copy source
+# COPY . .
+# # Copy deno configuration first
+# COPY deno-recipe-app/app/deno.json ./
+# COPY deno-recipe-app/app/deno.lock ./
+# # Install dependencies (this will cache them)
+RUN deno cache --lock=deno.lock deps.ts || echo "No deps.ts found, continuing..."
+# # Copy source code
+# COPY deno-recipe-app/app/ .
+# Compile the main app
+RUN deno cache main.ts
+
+# Expose port
+EXPOSE 8010
+
+# Push database schema 
+CMD ["deno", "run", "db:push"]
+
+# Run the app
+CMD ["deno", "run", "dev"]

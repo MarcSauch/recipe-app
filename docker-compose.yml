@@ -21,55 +21,42 @@ services:
   # Deno Backend API
   backend:
     build:
-      context: ..
-      dockerfile: recipe-app/Dockerfile.backend
+      context: ./deno-recipe-app
+      dockerfile: ../Dockerfile-backend
     container_name: recipe-backend
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       - DATABASE_URL=postgresql://recipe_user:recipe_password@database:5432/recipe_db
       - PORT=8010
       - DENO_DIR=/deno-dir
     ports:
       - "8010:8010"
+      - "4983:4983"
     depends_on:
       - database
     networks:
       - recipe-network
     volumes:
-      - ../deno-recipe-app/app:/app:cached
+      - ./deno-recipe-app/app:/app
       - deno-cache:/deno-dir
-    command: deno run --allow-net --allow-env --allow-read --allow-write --allow-sys --watch main.ts
 
   # Angular Frontend
   frontend:
     build:
-      context: ..
-      dockerfile: recipe-app/Dockerfile.frontend
+      context: .
+      dockerfile: ./Dockerfile-frontend
     container_name: recipe-frontend
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - "80:80"
-      - "4200:80"
+      - "4200:4200"
     depends_on:
       - backend
     networks:
       - recipe-network
+    # volumes:
+    #   - ./angular-recipe-app:/app
 
-  # Development mode for frontend (optional)
-  frontend-dev:
-    image: node:22-alpine
-    container_name: recipe-frontend-dev
-    working_dir: /app
-    volumes:
-      - ../angular-recipe-app:/app:cached
-      - /app/node_modules
-    ports:
-      - "4201:4200"
-    networks:
-      - recipe-network
-    command: sh -c "npm install && npm start -- --host 0.0.0.0 --port 4200"
-    profiles:
-      - development
 
 volumes:
   postgres_data:
